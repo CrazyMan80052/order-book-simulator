@@ -68,6 +68,7 @@ std::optional<BookError> OrderBook::replace_snapshot(const SnapshotPayload& snap
 }
 
 std::optional<BookError> OrderBook::apply_update(const LevelUpdatePayload& update) {
+    // Human study point: this is the atomic mutation path for batched level updates.
     std::set<std::pair<Side, PriceTicks>> touched;
     for (const LevelChange& change : update.changes) {
         if (change.price_ticks <= 0) {

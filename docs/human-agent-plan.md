@@ -60,6 +60,9 @@ This maps directly to phases in [order-book-plan.md](./order-book-plan.md).
    - By hand, build a tiny book and apply updates.
    - By hand, compute one multi-level IOC fill, VWAP, fee, net cash.
    - Explain why Level 2 cannot model queue position/passive fills.
+   - Implement and be ready to explain the core book mutation and IOC walk
+     algorithms in [src/order_book.cpp](../src/order_book.cpp) and
+     [src/execution.cpp](../src/execution.cpp).
 3. **Local operator workflow**
    - Personally run build/test commands at major checkpoints.
    - Read failures and ask agent for targeted fixes.
@@ -70,7 +73,10 @@ This maps directly to phases in [order-book-plan.md](./order-book-plan.md).
 ### Agent-owned tasks (delegate implementation)
 
 1. **Phases 1-6 core implementation**
-   - Scaffold project, domain types, parser/validator, sequencer, books, execution/fees, CLI/reporting.
+   - Scaffold project, domain types, parser/validator, sequencer, books,
+     execution/fees, CLI/reporting, replay plumbing, and JSON output helpers.
+   - Leave the core mutation and depth-walk algorithms to the human when they
+     want to learn or revise the matching behavior.
 2. **Phase 7 data adapter work**
    - Normalize one recorded source into canonical schema, with manifest + reproducible hashes.
 3. **Phase 8 benchmark harness**
@@ -86,3 +92,15 @@ This maps directly to phases in [order-book-plan.md](./order-book-plan.md).
 - **Checkpoint D (after Phase 9):** you rehearse interview defense against Understanding Gate items.
 
 If short on time, prioritize Checkpoints B and C; they give the highest interview payoff.
+
+## Final Human Edit Points
+
+When the agent finishes the surrounding scaffolding, the human should still be
+ready to rewrite or refine these core sections:
+
+- [src/order_book.cpp](../src/order_book.cpp): snapshot validation, batched
+   update journaling, and locked/crossed handling.
+- [src/execution.cpp](../src/execution.cpp): IOC depth walk, fill aggregation,
+   fee application, and slippage bookkeeping.
+- [app/main.cpp](../app/main.cpp): command-line behavior, argument validation,
+   and report routing if the CLI contract changes.

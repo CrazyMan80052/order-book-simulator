@@ -81,6 +81,7 @@ ExecutionOutcome quote_ioc(const OrderBook& book, const IOCOrder& order, const F
         return bid_price_ticks >= limit_price_ticks;
     };
 
+    // Human study point: this is the depth-walk algorithm for IOC fills.
     const auto& levels = order.side == Side::BUY ? book.levels(Side::SELL) : book.levels(Side::BUY);
     const auto result = order.side == Side::BUY
         ? quote_from_levels(levels, order.quantity, order.limit_price_ticks, marketable_buy)
