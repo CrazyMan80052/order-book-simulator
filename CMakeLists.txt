@@ -35,7 +35,10 @@ FetchContent_MakeAvailable(nlohmann_json)
 add_library(mdsim_core STATIC
     src/decimal.cpp
     src/event_parser.cpp
+    src/execution.cpp
+    src/fee_model.cpp
     src/order_book.cpp
+    src/reference_book.cpp
     src/sequencer.cpp
 )
 
@@ -57,6 +60,8 @@ target_compile_options(mdsim PRIVATE ${MDSIM_WARNINGS})
 if(BUILD_TESTING)
     add_executable(mdsim_tests
         tests/event_parser_test.cpp
+        tests/execution_test.cpp
+        tests/reference_book_test.cpp
         tests/order_book_test.cpp
         tests/sequencer_test.cpp
     )
