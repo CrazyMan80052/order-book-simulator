@@ -27,6 +27,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 add_library(mdsim_core STATIC
+    src/decimal.cpp
     src/order_book.cpp
 )
 

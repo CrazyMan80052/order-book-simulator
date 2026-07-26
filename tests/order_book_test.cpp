@@ -1,6 +1,21 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <variant>
+
+#include "mdsim/decimal.hpp"
 #include "mdsim/types.hpp"
+
+namespace {
+
+constexpr int64_t kScale = 1'000'000;
+
+void require_error(std::string_view text, mdsim::DecimalError::Code code) {
+    const auto result = mdsim::parse_scaled_decimal(text, kScale);
+    REQUIRE(std::holds_alternative<mdsim::DecimalError>(result));
+    REQUIRE(std::get<mdsim::DecimalError>(result).code == code);
+}
+
+}  // namespace
 
 TEST_CASE("domain enums and fixed-point aliases are constructible") {
     const mdsim::Side side = mdsim::Side::BUY;
@@ -50,4 +65,23 @@ TEST_CASE("IOC orders and fee configuration retain their values") {
     REQUIRE(order.quantity == 10'000);
     REQUIRE(fee.kind == mdsim::FeeModelKind::BASIS_POINTS);
     REQUIRE(fee.fee_bps == 20);
+}
+
+TEST_CASE("scaled decimals parse and format exactly") {
+    REQUIRE(std::get<int64_t>(mdsim::parse_scaled_decimal("0.480000", kScale)) == 480'000);
+    REQUIRE(std::get<int64_t>(mdsim::parse_scaled_decimal("12", kScale)) == 12'000'000);
+    REQUIRE(mdsim::format_scaled_decimal(480'000, kScale) == "0.480000");
+    REQUIRE(mdsim::format_scaled_decimal(-1, kScale) == "-0.000001");
+}
+
+TEST_CASE("scaled decimal errors identify invalid input") {
+    require_error("", mdsim::DecimalError::Code::EMPTY);
+    require_error("-1", mdsim::DecimalError::Code::NEGATIVE);
+    require_error("1.0000001", mdsim::DecimalError::Code::EXCESS_PRECISION);
+    require_error("1e2", mdsim::DecimalError::Code::INVALID_CHARACTER);
+    require_error("9223372036854775808", mdsim::DecimalError::Code::OVERFLOW);
+
+    const auto invalid_scale = mdsim::parse_scaled_decimal("1", 3);
+    REQUIRE(std::get<mdsim::DecimalError>(invalid_scale).code ==
+            mdsim::DecimalError::Code::INVALID_SCALE);
 }
