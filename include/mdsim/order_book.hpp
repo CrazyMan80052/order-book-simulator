@@ -23,6 +23,7 @@ public:
     using AskLevels = std::map<PriceTicks, Quantity, std::less<PriceTicks>>;
 
     std::optional<BookError> replace_snapshot(const SnapshotPayload& snapshot);
+    std::optional<BookError> apply_update(const LevelUpdatePayload& update);
 
     std::optional<Level> best_bid() const;
     std::optional<Level> best_ask() const;

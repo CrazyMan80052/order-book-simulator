@@ -109,3 +109,24 @@ TEST_CASE("invalid snapshots leave the previous book unchanged") {
     REQUIRE(error == mdsim::BookError::NON_POSITIVE_QUANTITY);
     REQUIRE(book.best_bid()->quantity == 10);
 }
+
+TEST_CASE("absolute updates add modify and cancel levels atomically") {
+    mdsim::OrderBook book;
+    REQUIRE_FALSE(book.replace_snapshot({{{480, 10}}, {{520, 10}}}));
+    REQUIRE_FALSE(book.apply_update({{{mdsim::Side::BUY, 485, 15},
+                                      {mdsim::Side::SELL, 520, 0}}}));
+    REQUIRE(book.best_bid()->price_ticks == 485);
+    REQUIRE_FALSE(book.best_ask());
+
+    REQUIRE_FALSE(book.apply_update({{{mdsim::Side::SELL, 520, 10}}}));
+    const auto error = book.apply_update({{{mdsim::Side::BUY, 520, 1}}});
+    REQUIRE(error == mdsim::BookError::LOCKED_OR_CROSSED);
+    REQUIRE(book.best_bid()->price_ticks == 485);
+}
+
+TEST_CASE("locked snapshots and invalid cancellations are rejected") {
+    mdsim::OrderBook book;
+    REQUIRE(book.replace_snapshot({{{520, 1}}, {{520, 1}}}) == mdsim::BookError::LOCKED_OR_CROSSED);
+    REQUIRE_FALSE(book.replace_snapshot({{{480, 1}}, {{520, 1}}}));
+    REQUIRE(book.apply_update({{{mdsim::Side::BUY, 470, 0}}}) == mdsim::BookError::MISSING_LEVEL);
+}
