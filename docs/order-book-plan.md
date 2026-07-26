@@ -146,6 +146,20 @@ price level.
 Do not use `float` or `double` for prices, quantities, notional, or fees.
 
 
+The first release uses United States dollars as its settlement currency and freezes
+the following scales for all generated and normalized data:
+
+- One price tick is 0.1 US cents, or $0.001.
+- `price_scale` is 1,000 price ticks per USD.
+- `tick_size` is 1 price tick.
+- Quantity is represented in integer quantity units (`quantity_scale` = 1).
+- Notional and fees are represented in thousandths of a USD (`currency_scale` =
+  1,000).
+
+Fractional quantity support is intentionally out of scope for the first release. A
+future change may introduce it, but it must update the schema and arithmetic rules
+explicitly rather than silently changing the meaning of existing data.
+
 Use small value types backed by signed 64-bit integers:
 
 
@@ -155,15 +169,15 @@ Use small value types backed by signed 64-bit integers:
 - `Fee`: integer settlement-currency units
 
 
-Each dataset manifest defines:
+Each dataset manifest records the fixed project scales:
 
 
-- Price scale, such as 1,000,000 units per currency unit
-- Quantity scale
-- Currency scale
+- Price scale: 1,000
+- Quantity scale: 1
+- Currency scale: 1,000
 - Valid minimum and maximum price
-- Tick size
-- Minimum quantity increment
+- Tick size: 1
+- Minimum quantity increment: 1
 
 
 Parse decimal strings with explicit overflow, scale, and precision checks. Use
@@ -171,18 +185,17 @@ Parse decimal strings with explicit overflow, scale, and precision checks. Use
 to 64 bits.
 
 
-For a price and quantity, compute settlement-currency units as:
+For an integer quantity and a price in $0.001 ticks, compute settlement-currency
+units (thousandths of a USD) as:
 
 
 ```text
-gross_notional =
-   round(price_ticks * quantity_units * currency_scale
-         / (price_scale * quantity_scale))
+gross_notional = price_ticks * quantity_units
 ```
 
 
-Choose and document the notional rounding rule before implementation. Use the same
-rule in hand-calculated fixtures, the execution engine, and reports. Derive VWAP from
+No notional rounding is required under these fixed scales. Use this integer formula
+in hand-calculated fixtures, the execution engine, and reports. Derive VWAP from
 total gross notional and total filled quantity instead of averaging level prices.
 
 
@@ -341,10 +354,10 @@ Every non-generated dataset must have a checked-in JSON manifest similar to:
  "canonical_sha256": "",
  "raw_bytes": 0,
  "canonical_bytes": 0,
- "price_scale": 1000000,
- "quantity_scale": 1000000,
- "currency_scale": 1000000,
- "tick_size": 1000,
+ "price_scale": 1000,
+ "quantity_scale": 1,
+ "currency_scale": 1000,
+ "tick_size": 1,
  "license_or_terms_url": "https://example.com/terms",
  "normalizer_command": "",
  "normalizer_git_commit": "",
@@ -415,10 +428,10 @@ raise compile-time safety caps.
  "type": "snapshot",
  "payload": {
    "bids": [
-     {"price": "0.480000", "quantity": "100.000000"}
+     {"price": "0.480", "quantity": "100"}
    ],
    "asks": [
-     {"price": "0.520000", "quantity": "80.000000"}
+     {"price": "0.520", "quantity": "80"}
    ]
  }
 }
@@ -445,8 +458,8 @@ passes validation.
    "changes": [
      {
        "side": "bid",
-       "price": "0.490000",
-       "new_quantity": "25.000000"
+       "price": "0.490",
+       "new_quantity": "25"
      }
    ]
  }
@@ -1793,6 +1806,5 @@ reference implementation, report the absolute result without an improvement clai
 
 Never restore "live," "50K+," "multithreaded," "lock-free," or "25% lower latency"
 from the old resume unless the rebuilt repository independently supports each term.
-
 
 

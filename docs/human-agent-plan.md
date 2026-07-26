@@ -54,6 +54,8 @@ This maps directly to phases in [order-book-plan.md](./order-book-plan.md).
 1. **Phase 0 decisions and semantics sign-off**
    - Approve definitions for snapshot/update/fill/fee/latency terms.
    - Approve strict policy behavior for invalid sequencing and locked/crossed states.
+   - Use USD settlement with $0.001 price ticks (0.1 cents), integer quantities, and
+     $0.001 notional/fee units throughout the first release.
 2. **Interview defense exercises (parallel with Phases 3-6)**
    - By hand, build a tiny book and apply updates.
    - By hand, compute one multi-level IOC fill, VWAP, fee, net cash.
