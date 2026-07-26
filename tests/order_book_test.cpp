@@ -3,6 +3,7 @@
 #include <variant>
 
 #include "mdsim/decimal.hpp"
+#include "mdsim/order_book.hpp"
 #include "mdsim/types.hpp"
 
 namespace {
@@ -84,4 +85,27 @@ TEST_CASE("scaled decimal errors identify invalid input") {
     const auto invalid_scale = mdsim::parse_scaled_decimal("1", 3);
     REQUIRE(std::get<mdsim::DecimalError>(invalid_scale).code ==
             mdsim::DecimalError::Code::INVALID_SCALE);
+}
+
+TEST_CASE("order book snapshots expose deterministic best levels and depth") {
+    mdsim::OrderBook book;
+    const mdsim::SnapshotPayload snapshot{
+        .bids = {{480, 10}, {475, 20}},
+        .asks = {{520, 30}, {525, 40}},
+    };
+
+    REQUIRE_FALSE(book.replace_snapshot(snapshot));
+    REQUIRE(book.best_bid()->price_ticks == 480);
+    REQUIRE(book.best_ask()->price_ticks == 520);
+    REQUIRE(book.total_quantity(mdsim::Side::BUY) == 30);
+    REQUIRE(book.levels(mdsim::Side::SELL).front().price_ticks == 520);
+}
+
+TEST_CASE("invalid snapshots leave the previous book unchanged") {
+    mdsim::OrderBook book;
+    REQUIRE_FALSE(book.replace_snapshot({{{480, 10}}, {{520, 10}}}));
+
+    const auto error = book.replace_snapshot({{{480, 0}}, {{520, 10}}});
+    REQUIRE(error == mdsim::BookError::NON_POSITIVE_QUANTITY);
+    REQUIRE(book.best_bid()->quantity == 10);
 }
