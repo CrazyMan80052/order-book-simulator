@@ -36,6 +36,7 @@ add_library(mdsim_core STATIC
     src/decimal.cpp
     src/event_parser.cpp
     src/order_book.cpp
+    src/sequencer.cpp
 )
 
 target_include_directories(mdsim_core
@@ -57,6 +58,7 @@ if(BUILD_TESTING)
     add_executable(mdsim_tests
         tests/event_parser_test.cpp
         tests/order_book_test.cpp
+        tests/sequencer_test.cpp
     )
 
     target_link_libraries(mdsim_tests
