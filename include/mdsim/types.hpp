@@ -51,6 +51,7 @@ struct LevelUpdatePayload {
 
 struct MarketEvent {
     EventType type;
+    std::string source;
     std::string market_id;
     SequenceNumber sequence;
     TimestampNs exchange_timestamp_ns;

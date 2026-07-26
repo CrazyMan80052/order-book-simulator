@@ -25,10 +25,16 @@ FetchContent_Declare(
     Catch2
     URL https://github.com/catchorg/Catch2/archive/refs/tags/v3.5.4.tar.gz
 )
+FetchContent_Declare(
+    nlohmann_json
+    URL https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.tar.gz
+)
 FetchContent_MakeAvailable(Catch2)
+FetchContent_MakeAvailable(nlohmann_json)
 
 add_library(mdsim_core STATIC
     src/decimal.cpp
+    src/event_parser.cpp
     src/order_book.cpp
 )
 
@@ -38,6 +44,7 @@ target_include_directories(mdsim_core
 )
 
 target_compile_options(mdsim_core PRIVATE ${MDSIM_WARNINGS})
+target_link_libraries(mdsim_core PUBLIC nlohmann_json::nlohmann_json)
 
 add_executable(mdsim
     app/main.cpp
@@ -48,6 +55,7 @@ target_compile_options(mdsim PRIVATE ${MDSIM_WARNINGS})
 
 if(BUILD_TESTING)
     add_executable(mdsim_tests
+        tests/event_parser_test.cpp
         tests/order_book_test.cpp
     )
 
