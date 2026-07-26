@@ -95,8 +95,9 @@ If short on time, prioritize Checkpoints B and C; they give the highest intervie
 
 ## Final Human Edit Points
 
-When the agent finishes the surrounding scaffolding, the human should still be
-ready to rewrite or refine these core sections:
+The surrounding scaffolding is now in place. The human should still be ready to
+rewrite or refine these core sections when learning, changing behavior, or
+adapting the CLI contract:
 
 - [src/order_book.cpp](../src/order_book.cpp): snapshot validation, batched
    update journaling, and locked/crossed handling.
@@ -104,3 +105,7 @@ ready to rewrite or refine these core sections:
    fee application, and slippage bookkeeping.
 - [app/main.cpp](../app/main.cpp): command-line behavior, argument validation,
    and report routing if the CLI contract changes.
+
+Completed agent-owned surfaces now include the replay engine, report writer,
+final-book serialization, and the `mdsim` CLI commands for `validate`,
+`replay`, `quote`, and `analyze-pair`.
