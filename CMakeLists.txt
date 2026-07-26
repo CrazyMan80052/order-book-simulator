@@ -39,6 +39,8 @@ add_library(mdsim_core STATIC
     src/fee_model.cpp
     src/order_book.cpp
     src/reference_book.cpp
+    src/report_writer.cpp
+    src/replay_engine.cpp
     src/sequencer.cpp
 )
 
@@ -62,6 +64,7 @@ if(BUILD_TESTING)
         tests/event_parser_test.cpp
         tests/execution_test.cpp
         tests/reference_book_test.cpp
+        tests/replay_engine_test.cpp
         tests/order_book_test.cpp
         tests/sequencer_test.cpp
     )
