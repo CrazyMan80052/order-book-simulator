@@ -87,6 +87,13 @@ TEST_CASE("scaled decimal errors identify invalid input") {
             mdsim::DecimalError::Code::INVALID_SCALE);
 }
 
+TEST_CASE("plain integer parsing accepts fee basis points without scaling") {
+    REQUIRE(mdsim::parse_nonnegative_integer("25") == 25);
+    REQUIRE(mdsim::parse_nonnegative_integer("0") == 0);
+    REQUIRE_FALSE(mdsim::parse_nonnegative_integer("-1"));
+    REQUIRE_FALSE(mdsim::parse_nonnegative_integer("1.5"));
+}
+
 TEST_CASE("order book snapshots expose deterministic best levels and depth") {
     mdsim::OrderBook book;
     const mdsim::SnapshotPayload snapshot{

@@ -1,0 +1,19 @@
+{
+  "markets": [
+    {
+      "asks": [
+        {
+          "price_ticks": 515,
+          "quantity": 14
+        }
+      ],
+      "bids": [
+        {
+          "price_ticks": 495,
+          "quantity": 13
+        }
+      ],
+      "market_id": "bench-market"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "generated_at_utc": "2026-08-02T01:41:00+00:00",
+  "command": "replay",
+  "workload": {
+    "path": "/home/sahas/coding/resume-projects/order-book-simulator/benchmarks/workloads/100k-events.ndjson",
+    "event_count": 100000,
+    "size_bytes": 25150100,
+    "sha256": "32f70e08112dc8198cbf4d552d635ee152d5556e897bb6b1680088cde139bc26"
+  },
+  "timing": {
+    "wall_clock_seconds": 7.622853,
+    "events_per_second": 13118.45
+  },
+  "summary": {
+    "accepted_events": 100000,
+    "book_errors": 0,
+    "duplicates": 0,
+    "gaps": 0,
+    "malformed_events": 0,
+    "out_of_order": 0,
+    "parsed_lines": 100000,
+    "rejected_events": 0,
+    "resynchronizations": 0
+  },
+  "outputs": {
+    "summary_path": "/home/sahas/coding/resume-projects/order-book-simulator/results/benchmarks/100k-summary.json",
+    "books_path": "/home/sahas/coding/resume-projects/order-book-simulator/results/benchmarks/100k-books.json"
+  }
+}

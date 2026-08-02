@@ -93,6 +93,38 @@ This maps directly to phases in [order-book-plan.md](./order-book-plan.md).
 
 If short on time, prioritize Checkpoints B and C; they give the highest interview payoff.
 
+## **Interview Checklist**
+
+- **Domain Model:** Level 2 order book semantics: snapshots vs level updates, price ticks, integer quantities.
+- **Fixed-Point Math:** how scaled decimals are represented/parsed and why (see `src/decimal.cpp`).
+- **Sequencing Rules:** snapshot requirement, duplicates, conflicting duplicates, gaps, resync; review `tests/sequencer_test.cpp`.
+- **Snapshot Validation:** `OrderBook::replace_snapshot` checks and locked/crossed detection (`src/order_book.cpp`).
+- **Batched Updates & Atomicity:** `OrderBook::apply_update` validation, `touched` duplicate detection, journaling, rollback on locked/crossed.
+- **Lock/Cross Policy:** rationale for detecting and reverting to preserve invariants (`locked_or_crossed`).
+- **Missing/Invalid Level Handling:** deletion of missing levels, zero/negative price or quantity errors.
+- **Execution Walk & Fills:** IOC depth-walk, fill aggregation, VWAP, and fee application (`src/execution.cpp`).
+- **Invariants & Tests:** where unit tests live and how they assert behaviors; run with `ctest --preset dev`.
+- **CLI & Replay:** `mdsim` commands (`validate`, `replay`, `quote`, `analyze-pair`) and the replay engine/report writer responsibilities.
+- **Edge Cases to Explain:** reverse-order rollback via journal, deterministic outputs for benchmarking, why Level 2 cannot model queue position.
+- **Talking Tips:** be ready to step through one snapshot → update → IOC example by hand, and point to `src/order_book.cpp` and `src/execution.cpp` as the two hot spots.
+
+### Files & Lines To Read
+
+- `OrderBook::replace_snapshot`: [src/order_book.cpp](src/order_book.cpp#L53-L67) d
+- `OrderBook::apply_update` (validation + duplicate detection): [src/order_book.cpp](src/order_book.cpp#L70-L89) d
+- `OrderBook::apply_update` (journaling + mutation): [src/order_book.cpp](src/order_book.cpp#L91-L113) d
+- `OrderBook` rollback on locked/crossed: [src/order_book.cpp](src/order_book.cpp#L115-L128) d
+- Fixed-point parsing: `parse_scaled_decimal`: [src/decimal.cpp](src/decimal.cpp#L30-L85)
+- Fixed-point formatting: `format_scaled_decimal`: [src/decimal.cpp](src/decimal.cpp#L87-L112)
+- IOC depth-walk helper `quote_from_levels`: [src/execution.cpp](src/execution.cpp#L36-L62)
+- IOC flow and fees: `quote_ioc`: [src/execution.cpp](src/execution.cpp#L66-L105)
+- Sequencer behaviors (tests): snapshot/acceptance: [tests/sequencer_test.cpp](tests/sequencer_test.cpp#L35-L41)
+- Sequencer behaviors (tests): duplicates/conflicts: [tests/sequencer_test.cpp](tests/sequencer_test.cpp#L43-L55)
+- Sequencer behaviors (tests): gap/resync: [tests/sequencer_test.cpp](tests/sequencer_test.cpp#L57-L67)
+- CLI arg parsing: [app/main.cpp](app/main.cpp#L54-L82)
+- CLI decimal parsing helpers: [app/main.cpp](app/main.cpp#L85-L96)
+- Book file loading and snapshot application: [app/main.cpp](app/main.cpp#L155-L206)
+- Quote output JSON / VWAP/slippage computation: [app/main.cpp](app/main.cpp#L209-L237)
 ## Final Human Edit Points
 
 The surrounding scaffolding is now in place. The human should still be ready to

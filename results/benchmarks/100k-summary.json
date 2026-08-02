@@ -1,0 +1,11 @@
+{
+  "accepted_events": 100000,
+  "book_errors": 0,
+  "duplicates": 0,
+  "gaps": 0,
+  "malformed_events": 0,
+  "out_of_order": 0,
+  "parsed_lines": 100000,
+  "rejected_events": 0,
+  "resynchronizations": 0
+}

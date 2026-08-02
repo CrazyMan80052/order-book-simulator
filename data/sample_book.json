@@ -1,0 +1,66 @@
+{
+  "markets": [
+    {
+      "market_id": "demo",
+      "bids": [
+        { "price_ticks": 495, "quantity": 9 },
+        { "price_ticks": 490, "quantity": 11 },
+        { "price_ticks": 485, "quantity": 10 },
+        { "price_ticks": 480, "quantity": 12 },
+        { "price_ticks": 475, "quantity": 8 },
+        { "price_ticks": 470, "quantity": 7 },
+        { "price_ticks": 465, "quantity": 6 },
+        { "price_ticks": 460, "quantity": 5 },
+        { "price_ticks": 455, "quantity": 4 },
+        { "price_ticks": 450, "quantity": 4 },
+        { "price_ticks": 445, "quantity": 3 },
+        { "price_ticks": 440, "quantity": 2 }
+      ],
+      "asks": [
+        { "price_ticks": 500, "quantity": 8 },
+        { "price_ticks": 505, "quantity": 10 },
+        { "price_ticks": 510, "quantity": 7 },
+        { "price_ticks": 515, "quantity": 6 },
+        { "price_ticks": 520, "quantity": 5 },
+        { "price_ticks": 525, "quantity": 5 },
+        { "price_ticks": 530, "quantity": 4 },
+        { "price_ticks": 535, "quantity": 4 },
+        { "price_ticks": 540, "quantity": 4 },
+        { "price_ticks": 545, "quantity": 3 },
+        { "price_ticks": 550, "quantity": 2 },
+        { "price_ticks": 555, "quantity": 2 }
+      ]
+    },
+    {
+      "market_id": "demo2",
+      "bids": [
+        { "price_ticks": 510, "quantity": 8 },
+        { "price_ticks": 505, "quantity": 9 },
+        { "price_ticks": 500, "quantity": 8 },
+        { "price_ticks": 495, "quantity": 7 },
+        { "price_ticks": 490, "quantity": 7 },
+        { "price_ticks": 485, "quantity": 6 },
+        { "price_ticks": 480, "quantity": 6 },
+        { "price_ticks": 475, "quantity": 5 },
+        { "price_ticks": 470, "quantity": 4 },
+        { "price_ticks": 465, "quantity": 4 },
+        { "price_ticks": 460, "quantity": 3 },
+        { "price_ticks": 455, "quantity": 2 }
+      ],
+      "asks": [
+        { "price_ticks": 515, "quantity": 7 },
+        { "price_ticks": 520, "quantity": 9 },
+        { "price_ticks": 525, "quantity": 8 },
+        { "price_ticks": 530, "quantity": 7 },
+        { "price_ticks": 535, "quantity": 6 },
+        { "price_ticks": 540, "quantity": 5 },
+        { "price_ticks": 545, "quantity": 5 },
+        { "price_ticks": 550, "quantity": 4 },
+        { "price_ticks": 555, "quantity": 4 },
+        { "price_ticks": 560, "quantity": 3 },
+        { "price_ticks": 565, "quantity": 3 },
+        { "price_ticks": 570, "quantity": 2 }
+      ]
+    }
+  ]
+}

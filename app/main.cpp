@@ -95,19 +95,6 @@ std::optional<int64_t> parse_units(std::string_view text, int64_t divisor) {
     return raw / divisor;
 }
 
-std::optional<int64_t> parse_nonnegative_units(std::string_view text, int64_t divisor) {
-    const mdsim::DecimalResult parsed = mdsim::parse_scaled_decimal(text, kCliScale);
-    if (const auto* error = std::get_if<mdsim::DecimalError>(&parsed)) {
-        (void)error;
-        return std::nullopt;
-    }
-    const int64_t raw = std::get<int64_t>(parsed);
-    if (raw < 0 || raw % divisor != 0) {
-        return std::nullopt;
-    }
-    return raw / divisor;
-}
-
 std::optional<mdsim::PriceTicks> parse_price_ticks(std::string_view text) {
     const auto units = parse_units(text, 1'000);
     if (!units) {
@@ -308,7 +295,7 @@ int run_quote(const ParsedArgs& args) {
     const auto side = parse_side(*side_text);
     const auto quantity = parse_quantity_units(*quantity_text);
     const auto limit_price = parse_price_ticks(*limit_price_text);
-    const auto fee_bps_value = parse_nonnegative_units(*fee_bps_text, 1);
+    const auto fee_bps_value = mdsim::parse_nonnegative_integer(*fee_bps_text);
     if (!side || !quantity || !limit_price || !fee_bps_value) {
         return 2;
     }
@@ -355,8 +342,8 @@ int run_analyze_pair(const ParsedArgs& args) {
 
     const auto quantity = parse_quantity_units(*quantity_text);
     const auto payout = parse_money_units(*payout_text);
-    const auto fee_bps_a = parse_nonnegative_units(*fee_bps_a_text, 1);
-    const auto fee_bps_b = parse_nonnegative_units(*fee_bps_b_text, 1);
+    const auto fee_bps_a = mdsim::parse_nonnegative_integer(*fee_bps_a_text);
+    const auto fee_bps_b = mdsim::parse_nonnegative_integer(*fee_bps_b_text);
     if (!quantity || !payout || !fee_bps_a || !fee_bps_b) {
         return 2;
     }

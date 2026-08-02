@@ -27,6 +27,28 @@ DecimalResult error(DecimalError::Code code) {
 
 }  // namespace
 
+std::optional<int64_t> parse_nonnegative_integer(std::string_view text) {
+    if (text.empty()) {
+        return std::nullopt;
+    }
+    if (text.front() == '+' || text.front() == '-') {
+        return std::nullopt;
+    }
+
+    int64_t value = 0;
+    for (const char character : text) {
+        if (character < '0' || character > '9') {
+            return std::nullopt;
+        }
+        const int digit = character - '0';
+        if (value > (std::numeric_limits<int64_t>::max() - digit) / 10) {
+            return std::nullopt;
+        }
+        value = value * 10 + digit;
+    }
+    return value;
+}
+
 DecimalResult parse_scaled_decimal(std::string_view text, int64_t scale) {
     const int fractional_digits = scale_digits(scale);
     if (fractional_digits < 0) {
